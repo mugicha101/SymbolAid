@@ -1,7 +1,45 @@
-# This is a sample Python script.
+from pynput import keyboard
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+symbols = {
+    "Sigma": "Σ"
+}
+
+command = {
+    "str": "",
+    "reading": False
+}
+
+
+def process_input(inp):
+    print(inp)
+
+
+def on_press(key):
+    if key is None:
+        return True
+    if command["reading"]:
+        if str(key) == "Key.space":
+            process_input(command["str"])
+            reading = False
+        elif str(key).isalpha():
+            command["str"] += str(key)
+        else:
+            command["reading"] = False
+    else:
+        if str(key) == "/":
+            command["str"] = ""
+            command["reading"] = True
+    return True
+
+def on_release(key):
+    return True
+
+# Collect events until released
+with keyboard.Listener(
+        on_press=on_press,
+        on_release=on_release) as listener:
+    listener.join()
 
 
 def print_hi(name):
@@ -9,8 +47,6 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
     print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
